@@ -5,6 +5,7 @@ import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { JwtAuthGuard } from "./guards/jwt-auth.gurad";
 import { GetUser } from "./get-user.decorator";
 import { User } from "../users/entities/user.entity";
+import { RefreshJwtAuthGuard } from "./guards/refresh-jwt-auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +35,11 @@ export class AuthController {
   @Get('profile')
   profile(@GetUser() user: Omit<User, "password">){
     return user;
+  }
+
+  @UseGuards(RefreshJwtAuthGuard)
+  @Post('refresh')
+  refreshToken(@Request() req) {
+    return this.authService.refreshToken(req.user)
   }
 }

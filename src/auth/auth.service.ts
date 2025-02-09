@@ -41,11 +41,18 @@ export class AuthService {
     return result;
   }
 
-  async signIn(user: Omit<User, "password">) {
+  signIn(user: Omit<User, "password">) {
     const payload = { email: user.email, id: user.id };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: this.jwtService.sign(payload, { expiresIn: '60s' }),
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
     };
   }
 
+  async refreshToken(user: Omit<User, "password">) {
+    const payload = { email: user.email, id: user.id };
+    return {
+      access_token: await this.jwtService.signAsync(payload, { expiresIn: '60s' }),
+    };
+  }
 }

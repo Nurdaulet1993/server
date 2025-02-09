@@ -1,4 +1,4 @@
-import { AfterInsert, AfterRemove, AfterUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AfterInsert, AfterRemove, AfterUpdate, BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
   name: 'users'
@@ -10,7 +10,9 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({
+    unique: true
+  })
   email: string;
 
   @AfterInsert()
