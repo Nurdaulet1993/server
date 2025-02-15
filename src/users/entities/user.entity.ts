@@ -1,4 +1,13 @@
-import { AfterInsert, AfterRemove, AfterUpdate, BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  AfterInsert,
+  AfterRemove,
+  AfterUpdate,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from "typeorm";
+import { Task} from "../../tasks/entities/task.entity";
 
 @Entity({
   name: 'users'
@@ -29,4 +38,7 @@ export class User {
   afterRemove() {
     console.log(`User with ID ${this.email} has been removed.`);
   }
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
 }
