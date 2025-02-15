@@ -14,12 +14,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite',
-    //   database: 'db.sqlite',
-    //   synchronize: true,
-    //   autoLoadEntities: true,
-    // }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
         type: 'sqlite',
