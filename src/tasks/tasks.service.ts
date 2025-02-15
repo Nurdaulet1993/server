@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Task } from "./entities/task.entity";
 import { Repository } from "typeorm";
 import { User } from "../users/entities/user.entity";
+import { GetTasksDto } from "./dto/get-tasks.dto";
 
 @Injectable()
 export class TasksService {
@@ -20,8 +21,13 @@ export class TasksService {
     return this.taskRepo.save(task);
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  findAll({ title, description }: GetTasksDto) {
+    return this.taskRepo.createQueryBuilder()
+      .select('*')
+      .where('title = :title', { title })
+      .andWhere('description = :description', { description })
+      .limit(3)
+      .getRawMany();
   }
 
   findOne(id: number) {

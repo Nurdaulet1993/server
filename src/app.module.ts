@@ -6,19 +6,32 @@ import { MessagesModule } from './messages/messages.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from './auth/auth.module';
-
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`
+    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'db.sqlite',
+    //   synchronize: true,
+    //   autoLoadEntities: true,
+    // }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        type: 'sqlite',
+        database: config.get('DB_NAME'),
+        synchronize: true,
+        autoLoadEntities: true,
+      }),
+      inject: [ConfigService],
+    }),
     UsersModule,
     MessagesModule,
     TasksModule,
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      synchronize: true,
-      autoLoadEntities: true,
-    }),
     AuthModule,
   ],
   controllers: [AppController],
