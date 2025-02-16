@@ -5,9 +5,9 @@ import { UsersModule } from "../users/users.module";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
-import { jwtConstants } from "./constants";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { RefreshJwtStrategy } from "./strategies/refresh-token.strategy";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   providers: [
@@ -20,11 +20,19 @@ import { RefreshJwtStrategy } from "./strategies/refresh-token.strategy";
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      global: true,
-      secret: jwtConstants.secret,
-      // signOptions: { expiresIn: '1d' }
-    }),
+    // JwtModule.register({
+    //   global: true,
+    //   secret: jwtConstants.secret,
+    //   // signOptions: { expiresIn: '1d' }
+    // }),
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => ({
+        global: true,
+        secret: config.get<string>('JWT_SECRET'),
+      }),
+      inject: [ConfigService],
+      imports: [ConfigModule]
+    })
   ],
   exports: [AuthService]
 })
