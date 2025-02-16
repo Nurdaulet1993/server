@@ -20,11 +20,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
   imports: [
     UsersModule,
     PassportModule,
-    // JwtModule.register({
-    //   global: true,
-    //   secret: jwtConstants.secret,
-    //   // signOptions: { expiresIn: '1d' }
-    // }),
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => ({
         global: true,
