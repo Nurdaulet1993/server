@@ -4,15 +4,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository} from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
+import { ProfilesService } from "../profiles/profiles.service";
 
 @Injectable()
 export class UsersService {
   constructor(
    @InjectRepository(User)
    private userRepo: Repository<User>,
+   private profilesService: ProfilesService
   ) {}
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+    // Creating profile
+    createUserDto.profile = createUserDto.profile ?? {};
+    // const profile = await this.profilesService.create(createUserDto.profile);
+    // Creating user
     const user = this.userRepo.create(createUserDto);
+    // Adding profile to user
+    // user.profile = profile; // We do not need this because of cascade
     return this.userRepo.save(user);
   }
 

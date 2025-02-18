@@ -3,11 +3,12 @@ import {
   AfterRemove,
   AfterUpdate,
   Column,
-  Entity,
-  OneToMany,
+  Entity, JoinColumn,
+  OneToMany, OneToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Task} from "../../tasks/entities/task.entity";
+import { Profile } from "../../profiles/entities/profile.entity";
 
 @Entity({
   name: 'users'
@@ -41,4 +42,12 @@ export class User {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @OneToOne(
+    () => Profile,
+      profile => profile.user,
+    { cascade: ["insert"] } // Because of cascade insert you do not need create a profile by yourself
+  )
+  @JoinColumn()
+  profile?: Profile;
 }

@@ -1,4 +1,5 @@
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
+import { CreateProfileDto } from "../../profiles/dto/create-profile.dto";
 
 export class SignUpDto {
   @IsEmail()
@@ -7,4 +8,7 @@ export class SignUpDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @IsOptional()
+  profile: CreateProfileDto | null;
 }

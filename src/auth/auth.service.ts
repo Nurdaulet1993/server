@@ -17,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async signUp({ email, password }: SignUpDto) {
+  async signUp({ email, password, profile }: SignUpDto) {
     // Check if email is already taken
     const existUser = await this.usersService.findByEmail(email);
     if (existUser.length) throw new BadRequestException('email in use');
@@ -25,7 +25,7 @@ export class AuthService {
     const salt = randomBytes(8).toString('hex'); // Random text
     const hash = (await scrypt(password, salt, 32)) as Buffer; // 32 rounds of hashing
     const result = `${salt}.${hash.toString('hex')}`;
-    return this.usersService.create({ email, password: result });
+    return this.usersService.create({ email, password: result, profile });
   }
 
 
