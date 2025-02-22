@@ -7,7 +7,6 @@ import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
@@ -18,8 +17,12 @@ import { PermissionsModule } from './permissions/permissions.module';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService): TypeOrmModuleOptions => ({
-        type: 'sqlite',
-        database: config.get<string>('DB_NAME') ?? 'db.sqlite',
+        type: 'postgres',
+        host: 'localhost',
+        port: 5433,
+        username: config.get<string>('DB_USER'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_NAME'),
         synchronize: true,
         autoLoadEntities: true,
       }),
@@ -30,7 +33,6 @@ import { PermissionsModule } from './permissions/permissions.module';
     MessagesModule,
     TasksModule,
     AuthModule,
-    RolesModule,
     PermissionsModule,
   ],
   controllers: [AppController],

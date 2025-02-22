@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Task} from "../../tasks/entities/task.entity";
-import { Role } from "../../roles/entities/role.entity";
+import { Role } from "../../auth/enums/role.enum";
 
 @Entity({
   name: 'users'
@@ -43,9 +43,16 @@ export class User {
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
 
-  @ManyToMany(() => Role, (role) => role.users)
-  @JoinTable({
-    name: 'users_roles',
-  })  // Join table for many-to-many relationship with roles
-  roles: Role[];
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.ADMIN  // Default role is USER if not specified
+  })
+  role: Role;
+
+  // @ManyToMany(() => Role, (role) => role.users)
+  // @JoinTable({
+  //   name: 'users_roles',
+  // })  // Join table for many-to-many relationship with roles
+  // roles: Role[];
 }
