@@ -13,8 +13,8 @@ export default new DataSource({
   host: 'localhost',
   port: 5433,
   username: 'postgres',
-  password: '123456',
-  database: 'todo',
+  password: configService.get('DB_PASSWORD'),
+  database: configService.get<string>('DB_NAME'),
   entities: [User, Task, Profile],
   migrations: ['migrations/**']
 })
